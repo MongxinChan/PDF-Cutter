@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <defs>
+    <pattern id="grid" width="64" height="64" patternUnits="userSpaceOnUse">
+      <path d="M64 0H0V64" fill="none" stroke="#FFFFFF" stroke-opacity="0.09" stroke-width="4"/>
+    </pattern>
+    <clipPath id="tile">
+      <rect x="64" y="64" width="896" height="896" rx="200"/>
+    </clipPath>
+  </defs>
+
+  <!-- cutting mat -->
+  <rect x="64" y="64" width="896" height="896" rx="200" fill="#2F6A50"/>
+  <rect x="64" y="64" width="896" height="896" fill="url(#grid)" clip-path="url(#tile)"/>
+
+  <!-- top piece of the page, with folded corner -->
+  <path d="M300 220 H640 L724 304 V466 H300 Z" fill="#FDFDFB"/>
+  <path d="M640 220 V304 H724 Z" fill="#CBD5CD"/>
+  <rect x="350" y="318" width="240" height="22" rx="11" fill="#C9D2CB"/>
+  <rect x="350" y="362" width="324" height="22" rx="11" fill="#C9D2CB"/>
+  <rect x="350" y="406" width="280" height="22" rx="11" fill="#C9D2CB"/>
+
+  <!-- bottom piece of the page -->
+  <path d="M300 558 H724 V804 H300 Z" fill="#FDFDFB"/>
+  <rect x="350" y="604" width="324" height="22" rx="11" fill="#C9D2CB"/>
+  <rect x="350" y="648" width="260" height="22" rx="11" fill="#C9D2CB"/>
+  <rect x="350" y="692" width="300" height="22" rx="11" fill="#C9D2CB"/>
+
+  <!-- cut line -->
+  <line x1="196" y1="512" x2="828" y2="512" stroke="#F5C542" stroke-width="22"
+        stroke-linecap="round" stroke-dasharray="46 32"/>
+</svg>
