@@ -1,0 +1,75 @@
+# Builds the desktop app for macOS and Windows.
+#   - Push a tag like v1.0.0  -> builds both and publishes a GitHub Release with the installers.
+#   - Run manually (Actions -> "构建桌面版" -> Run workflow) -> builds only; download from the run's Artifacts.
+name: 构建桌面版
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: macos-latest
+            name: macos
+            files: dist/*.dmg
+          - os: windows-latest
+            name: windows
+            files: dist/*.exe
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+
+      - name: 安装依赖
+        run: npm install
+
+      - name: 打包
+        run: npm run dist:ci
+        env:
+          # No Apple / Windows code-signing certificate: build unsigned.
+          CSC_IDENTITY_AUTO_DISCOVERY: "false"
+
+      - name: 保存构建产物
+        uses: actions/upload-artifact@v7
+        with:
+          name: pdf-cutter-${{ matrix.name }}
+          path: ${{ matrix.files }}
+          if-no-files-found: error
+
+  release:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v8
+        with:
+          path: out
+          merge-multiple: true
+
+      - run: ls -la out
+
+      - name: 发布 Release
+        uses: softprops/action-gh-release@v3
+        with:
+          files: out/*
+          name: PDF 裁纸台 ${{ github.ref_name }}
+          body: |
+            ## 下载哪个文件？
+
+            - **Windows**：`pdf-cutter-…-windows-setup.exe` 是安装版；`pdf-cutter-…-windows-portable.exe` 免安装，双击就能用。
+            - **macOS（Apple 芯片，M1 及以后）**：`pdf-cutter-…-mac-arm64.dmg`
+            - **macOS（Intel 芯片）**：`pdf-cutter-…-mac-x64.dmg`
+
+            这个 App 没有购买开发者签名证书，第一次打开时系统可能会拦截，处理方法见仓库 README 的“第一次打开被拦截”一节。

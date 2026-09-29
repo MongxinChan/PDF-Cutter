@@ -1,0 +1,51 @@
+# Publishes index.html to GitHub Pages every time main is updated.
+# One-time setup: repo Settings -> Pages -> Build and deployment -> Source: "GitHub Actions".
+name: 发布网站
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: 组装网站文件（附带本地 pdf-lib / JSZip，打开更快）
+        run: |
+          mkdir -p _site/lib _site/build
+          cp index.html _site/
+          cp build/icon.svg _site/build/icon.svg
+          curl -fsSL https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js -o _site/lib/pdf-lib.min.js \
+            || curl -fsSL https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js -o _site/lib/pdf-lib.min.js
+          curl -fsSL https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js -o _site/lib/jszip.min.js \
+            || curl -fsSL https://unpkg.com/jszip@3.10.1/dist/jszip.min.js -o _site/lib/jszip.min.js
+          touch _site/.nojekyll
+          ls -la _site _site/lib
+
+      - uses: actions/configure-pages@v6
+
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v5
