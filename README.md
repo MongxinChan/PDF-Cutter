@@ -14,7 +14,7 @@ A lightweight, privacy-friendly PDF splitter for the browser, Windows and macOS.
 - **本地处理**：PDF 文件不会上传，桌面版内置组件，可离线使用。
 - **三种拆分方式**：按页数、按大小、自定义范围；大小和页数限制可同时设置。
 - **批量导出**：单份下载、逐个保存全部，或打包为 ZIP。
-- **轻量桌面版**：v1.0.1 Windows 安装包约 **1.31 MiB**，免安装版约 **3.32 MiB**。
+- **轻量桌面版**：v1.0.2 Windows 安装包约 **1.31 MiB**，免安装版约 **3.32 MiB**。
 - **跨平台**：可直接在浏览器使用，也提供 Windows 和 macOS 桌面版。
 
 > Windows 桌面版需要 WebView2。上述体积不包含完整运行时；安装版会在缺少运行时时联网安装，免安装版需要系统已安装 WebView2。

@@ -12,7 +12,7 @@ A lightweight, free and open-source **PDF splitter** for the browser, Windows an
 - **Local processing:** your PDFs stay on your device. The desktop app bundles its processing libraries and works offline.
 - **Three splitting modes:** page count, file size and custom ranges. File size and page count limits can be combined.
 - **Batch export:** download individual files, save all parts in sequence or export a ZIP archive.
-- **Small desktop downloads:** the v1.0.1 Windows installer is approximately **1.31 MiB**; the portable executable is approximately **3.32 MiB**.
+- **Small desktop downloads:** the v1.0.2 Windows installer is approximately **1.31 MiB**; the portable executable is approximately **3.32 MiB**.
 - **Cross-platform:** use it in your browser or download the Windows or macOS app.
 
 > The Windows desktop app requires WebView2. These download sizes exclude the full runtime. The installer downloads it if missing; the portable executable requires WebView2 to be installed already.
