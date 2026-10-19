@@ -1,100 +1,123 @@
-# PDF 裁纸台
+# PDF 裁纸台 · PDF Splitter
 
-把大 PDF 切成几份小文件，方便分批上传给 Claude（或其他有文件大小、页数限制的地方）。
+轻量、免费开源的 **PDF 拆分工具**。按页数、文件大小或自定义页码范围切分 PDF，文件在本地处理，无需注册，也不会上传到服务器。
 
-文件只在你自己的电脑上处理，不会上传到任何服务器。
+A lightweight, privacy-friendly PDF splitter for the browser, Windows and macOS. Split by page count, file size or custom page ranges — your PDF stays on your device.
 
-## 能做什么
+**[在线体验](https://www.loners.site/PDF-Cutter/) · [下载桌面版](https://github.com/MongxinChan/PDF-Cutter/releases/latest) · [反馈问题](https://github.com/MongxinChan/PDF-Cutter/issues)**
 
-- **按页数切：** 例如每 50 页一份。
-- **按大小切：** 每份不超过指定 MB，还可以同时限制每份最多多少页。一键套用 Claude 常用上限（30 MB、100 页）。
-- **自定义范围：** 例如 `1-20, 21-45, 46-`，每个范围一份。
-- 切之前可以预览每一份包含哪些页；切完后可以单个下载、逐个下载全部，或打包成 ZIP。
+[![最新版本](https://img.shields.io/github/v/release/MongxinChan/PDF-Cutter?label=release)](https://github.com/MongxinChan/PDF-Cutter/releases/latest)
+[![MIT License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
-## 怎么用
+- **本地处理**：PDF 文件不会上传，桌面版内置组件，可离线使用。
+- **三种拆分方式**：按页数、按大小、自定义范围；大小和页数限制可同时设置。
+- **批量导出**：单份下载、逐个保存全部，或打包为 ZIP。
+- **轻量桌面版**：v1.0.1 Windows 安装包约 **1.31 MiB**，免安装版约 **3.32 MiB**。
+- **跨平台**：可直接在浏览器使用，也提供 Windows 和 macOS 桌面版。
 
-**网页版：** 直接打开 GitHub Pages 上的网页即可（地址见仓库右侧 About 栏）。
+> Windows 桌面版需要 WebView2。上述体积不包含完整运行时；安装版会在缺少运行时时联网安装，免安装版需要系统已安装 WebView2。
 
-**桌面版：** 到 [Releases](../../releases/latest) 下载：
+## 看看实际效果
 
-| 系统 | 下载的文件 |
+![PDF 裁纸台界面：将 120 页课程讲义按每份 40 页拆分为三个 PDF，并支持批量下载和 ZIP 导出](docs/images/pdf-cutter-demo.png)
+
+*实际界面截图，使用生成的示例讲义演示：120 页 → 3 份，每份 40 页。*
+
+## 适合哪些场景？
+
+- **整理教材和课程讲义**：按章节提取页码范围，或每隔固定页数拆成一份。
+- **分批上传给 AI 工具**：根据 Claude 等工具的文件大小和页数要求拆分文档。
+- **分享大型 PDF 或扫描件**：按目标大小分成小文件，再批量保存或打包发送。
+
+| 拆分方式 | 例子 |
 | --- | --- |
-| Windows | `pdf-cutter-…-windows-setup.exe`（安装版）或 `…-windows-portable.exe`（免安装） |
-| macOS，Apple 芯片（M1 及以后） | `pdf-cutter-…-mac-arm64.dmg` |
-| macOS，Intel 芯片 | `pdf-cutter-…-mac-x64.dmg` |
+| 按页数 | 120 页讲义，每 40 页一份，得到 3 个 PDF |
+| 按大小 | 每份不超过 10 MB，并同时限制每份最多 50 页 |
+| 自定义范围 | 输入 `1-20, 35-60, 80-`，分别提取对应页码范围 |
 
-桌面版使用 **Tauri 2 + 系统 WebView**，不再随应用分发 Chromium 和 Node.js。网页和桌面版共用同一套 PDF 切分逻辑，桌面版内置全部网页组件，可离线处理文件。
+按大小拆分会根据实际输出文件试切；如果单页本身已经超过上限，会保留该页并显示提示。
 
-切好的文件会保存到“下载 / PDF裁纸台”文件夹，同名文件自动添加编号，不覆盖已有文件；一次批量导出结束后打开一次文件夹。
+## 三步上手
 
-**Windows 需要 Microsoft Edge WebView2 Runtime。** 安装版检测到缺失时会联网下载；免安装版要求电脑已经安装 WebView2。应用包不附带完整运行时，所以“免安装”不代表能在缺少运行时的电脑上直接运行。macOS 使用系统 WKWebView。
+1. 打开 **[在线版](https://www.loners.site/PDF-Cutter/)** 或桌面 App，拖入一个 PDF，也可以点击选择文件。
+2. 选择拆分方式并填写参数，查看页码范围预览。
+3. 点击“开始切分”，完成后下载单份文件，或点击“打包下载 ZIP”。
 
-## 第一次打开被拦截
+桌面版会将文件保存到 **下载 / PDF裁纸台**，遇到同名文件自动加编号，不覆盖已有文件；批量导出结束后打开一次文件夹。网页版的保存位置由浏览器管理。
 
-这个 App 没有购买苹果和微软的开发者签名证书，所以系统第一次会提示风险。
+## 下载桌面版
 
-**Windows** 出现“Windows 已保护你的电脑”：点“更多信息”，再点“仍要运行”。
+前往 **[最新版本 Releases](https://github.com/MongxinChan/PDF-Cutter/releases/latest)**，根据系统选择：
 
-**macOS** 提示“无法验证开发者”或“Apple 无法检查其是否包含恶意软件”：先点“完成”关掉提示，打开“系统设置 → 隐私与安全性”，往下找到这个 App 的提示，点“仍要打开”。较旧的 macOS 也可以在“应用程序”里右键点 App，选“打开”。
+| 系统 | 下载文件 |
+| --- | --- |
+| Windows x64，安装版 | `pdf-cutter-版本号-windows-setup.exe` |
+| Windows x64，免安装版 | `pdf-cutter-版本号-windows-portable.exe` |
+| macOS，Apple 芯片（M1 及以后） | `pdf-cutter-版本号-mac-arm64.dmg` |
+| macOS，Intel 芯片 | `pdf-cutter-版本号-mac-x64.dmg` |
 
-**macOS** 提示“已损坏，无法打开”：把 App 拖进“应用程序”文件夹后，打开“终端”，运行下面这行，然后再打开 App：
+桌面版使用 **Tauri 2 + 系统 WebView**。相比 v1.0.0 的 Electron 版，Windows 安装包从约 **106.29 MiB** 降到 v1.0.1 的约 **1.31 MiB**。这是应用分发包体积的比较，不包含 WebView2 运行时占用，也不代表处理 PDF 时的内存用量。
+
+首次启动可能出现未签名应用提示，处理方式见下方常见问题。
+
+## 常见问题
+
+<details>
+<summary>文件会上传吗？没有网络能用吗？</summary>
+
+PDF 的读取、切分和 ZIP 打包均在本地完成，不会上传文档。
+
+在线版首次打开需要加载网页及组件。桌面版内置全部处理组件，安装和运行时准备就绪后，可离线处理文件。也可以按[开发文档](docs/DEVELOPMENT.md)组装离线网页。
+
+</details>
+
+<details>
+<summary>这是 PDF 压缩工具吗？</summary>
+
+它用于拆分、提取 PDF 页面，不提供图片降质压缩或页边裁剪。如果单页已经超过设定大小，拆分无法让这一页满足限制，工具会给出提示。
+
+</details>
+
+<details>
+<summary>Claude 的上传限制是多少？</summary>
+
+界面提供 30 MB、100 页的快捷预设，两个参数均可调整。平台限制可能随产品、账户和时间变化，请以实际上传时的提示为准。
+
+</details>
+
+<details>
+<summary>第一次打开桌面版被系统拦截怎么办？</summary>
+
+应用目前没有购买苹果和微软的开发者签名证书。确认文件来自本仓库的 [Releases](https://github.com/MongxinChan/PDF-Cutter/releases/latest) 后：
+
+- **Windows** 提示“Windows 已保护你的电脑”：点击“更多信息”，再点击“仍要运行”。
+- **macOS** 提示无法验证开发者：先关闭提示，再到“系统设置 → 隐私与安全性”中找到该 App，点击“仍要打开”；较旧系统也可在“应用程序”里右键 App，选择“打开”。
+- **macOS** 提示“已损坏，无法打开”：把 App 放入“应用程序”文件夹，确认下载来源后，在终端执行：
 
 ```bash
 xattr -cr "/Applications/PDF 裁纸台.app"
 ```
 
+</details>
+
 ## 本地开发
 
-建议使用 Node.js 24 LTS，并安装 [Rust stable](https://rustup.rs/)。平台构建依赖见 [Tauri 前置要求](https://v2.tauri.app/start/prerequisites/)：
-
-- Windows：Visual Studio Build Tools 的“使用 C++ 的桌面开发”（MSVC、Windows SDK），以及 WebView2。
-- macOS：Xcode Command Line Tools；DMG 需在 macOS 上构建。
+建议使用 Node.js 24 LTS、Rust stable，并按系统安装 [Tauri 构建依赖](https://v2.tauri.app/start/prerequisites/)。
 
 ```bash
-npm install        # 同时会把 pdf-lib、JSZip 复制到 lib/，网页即可离线使用
-npm start          # 启动桌面版
-npm run dist       # 在本机打包当前系统的安装包，输出到 dist/
+npm ci          # 安装依赖并准备离线 PDF / ZIP 组件
+npm start       # 启动桌面开发版
+npm run dist    # 构建当前系统的安装包，输出到 dist/
 ```
 
-已有锁文件的环境使用 `npm ci`。桌面构建先把明确列出的网页资源复制到 `web-dist/`，再嵌入可执行文件，不会打入源代码、测试、node_modules 或编译工具链。
+完整的平台依赖、离线网页组装、测试命令和项目结构见 **[开发与构建文档](docs/DEVELOPMENT.md)**。
 
-构建命令：
+## 反馈与贡献
 
-```bash
-npm run dist:win   # 在 Windows 上生成 NSIS 安装包及独立 EXE
-npm run dist:mac   # 在 macOS 上生成当前架构的 DMG
-npm run prepare:web  # 只组装离线网页；可直接打开 web-dist/index.html
-```
+欢迎通过 [Issues](https://github.com/MongxinChan/PDF-Cutter/issues) 反馈问题或提出建议，也欢迎提交 Pull Request。反馈时请说明系统、应用版本、复现步骤及报错信息；示例 PDF 请使用不含个人或敏感信息的文件。
 
-Windows 安装包使用 LZMA 压缩，Rust 发布构建启用 LTO、符号剥离和体积优化。GitHub Actions 分别在 Windows x64、macOS ARM64 和 macOS x64 上构建。首次编译会下载 Rust 依赖，耗时较长。
-
-验证命令：
-
-```bash
-npx playwright install chromium
-npm test
-npm run icon
-npm run prepare:web
-cargo test --locked --manifest-path src-tauri/Cargo.toml
-```
-
-网页测试在禁用外网资源的条件下验证三种切分方式、PDF/ZIP 导出与桌面保存失败恢复。桌面接口在浏览器测试中使用模拟实现；Rust 测试验证文件名限制和并发重名保护，实际 WebView 行为仍需在目标系统验收。
-
-## 项目结构
-
-```
-index.html                   网页本体（网页版和桌面版共用）
-desktop.js                   Tauri 二进制保存接口及环境识别
-src-tauri/src/               桌面入口、原生文件保存和重名保护
-src-tauri/tauri.conf.json     窗口、资源、安全和安装包配置
-scripts/copy-libs.js         npm install 后把 pdf-lib / JSZip 复制到 lib/
-scripts/prepare-web.js       组装仅含必要资源的离线网页
-scripts/collect-artifacts.js 统一安装包名称，输出到 dist/
-tests/                      网页和桌面导出接口回归测试
-.github/workflows/pages.yml  推送到 main 后自动发布网页
-.github/workflows/release.yml 推送 v 开头的标签后自动打包 Windows / macOS 并发布 Release
-```
+如果这个工具帮你解决了问题，欢迎点一个 Star，或把在线体验链接分享给需要拆分 PDF 的人。
 
 ## 许可
 
-MIT
+[MIT License](LICENSE)
