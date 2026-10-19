@@ -1,6 +1,6 @@
 [package]
 name = "pdf-cutter"
-version = "1.0.0"
+version = "1.0.1"
 description = "离线 PDF 裁纸台"
 authors = ["Mongxin"]
 edition = "2021"

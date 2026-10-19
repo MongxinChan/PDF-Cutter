@@ -1,7 +1,7 @@
 {
   "name": "pdf-cutter",
   "productName": "PDF 裁纸台",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "把大 PDF 按页数、大小或自定义范围切成小份，方便分批上传给 Claude。",
   "author": "Mongxin",
   "license": "MIT",

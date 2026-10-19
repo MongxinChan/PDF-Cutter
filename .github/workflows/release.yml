@@ -100,6 +100,8 @@ jobs:
           files: out/*
           name: PDF 裁纸台 ${{ github.ref_name }}
           body: |
+            桌面版现已使用 Tauri 2，复用系统 WebView，大幅缩小安装包。保留离线 PDF 切分、批量保存、ZIP 导出和同名文件保护。
+
             ## 下载哪个文件？
 
             - **Windows**：`pdf-cutter-…-windows-setup.exe` 是安装版；`pdf-cutter-…-windows-portable.exe` 免安装。需要 WebView2，安装版会在缺失时联网安装；免安装版需系统已安装 WebView2。

@@ -15,8 +15,8 @@ function copy(source, name) {
   console.log(`[dist] ${name}: ${(fs.statSync(destination).size / 1024 / 1024).toFixed(2)} MiB`);
 }
 function findBundle(folder, extension) {
-  const files = fs.readdirSync(folder).filter(name => name.endsWith(extension));
-  if (files.length !== 1) throw new Error(`期望 ${folder} 内只有一个 ${extension} 安装包，实际为 ${files.length} 个。请清理旧安装包后重试。`);
+  const files = fs.readdirSync(folder).filter(name => name.includes(`_${version}_`) && name.endsWith(extension));
+  if (files.length !== 1) throw new Error(`期望 ${folder} 内有一个 ${version} 版本的 ${extension} 安装包，实际为 ${files.length} 个。`);
   return path.join(folder, files[0]);
 }
 if (process.platform === "win32") {
