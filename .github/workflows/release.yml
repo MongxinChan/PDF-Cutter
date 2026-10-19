@@ -18,12 +18,20 @@ jobs:
       matrix:
         include:
           - os: macos-latest
-            name: macos
+            name: mac-arm64
+            target: aarch64-apple-darwin
+            files: dist/*.dmg
+          - os: macos-15-intel
+            name: mac-x64
+            target: x86_64-apple-darwin
             files: dist/*.dmg
           - os: windows-latest
             name: windows
+            target: x86_64-pc-windows-msvc
             files: dist/*.exe
     runs-on: ${{ matrix.os }}
+    env:
+      CARGO_BUILD_TARGET: ${{ matrix.target }}
 
     steps:
       - uses: actions/checkout@v7
@@ -31,15 +39,41 @@ jobs:
       - uses: actions/setup-node@v7
         with:
           node-version: 24
+          cache: npm
+
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: src-tauri -> target
+          key: ${{ matrix.target }}
 
       - name: 安装依赖
-        run: npm install
+        run: npm ci
+
+      - name: 验证网页和桌面导出接口
+        if: runner.os == 'Windows'
+        run: |
+          npx playwright install chromium
+          npm test
+
+      - name: 准备图标和资源
+        run: |
+          npm run icon
+          npm run prepare:web
+
+      - name: 验证文件保存与重名保护
+        run: cargo test --locked --manifest-path src-tauri/Cargo.toml
 
       - name: 打包
-        run: npm run dist:ci
+        run: |
+          npm run tauri -- build --ci --target ${{ matrix.target }} -- --locked
+          node scripts/collect-artifacts.js
         env:
-          # No Apple / Windows code-signing certificate: build unsigned.
-          CSC_IDENTITY_AUTO_DISCOVERY: "false"
+          # Build unsigned; macOS packaging must not prompt for a signing identity.
+          APPLE_SIGNING_IDENTITY: "-"
 
       - name: 保存构建产物
         uses: actions/upload-artifact@v7
@@ -68,7 +102,7 @@ jobs:
           body: |
             ## 下载哪个文件？
 
-            - **Windows**：`pdf-cutter-…-windows-setup.exe` 是安装版；`pdf-cutter-…-windows-portable.exe` 免安装，双击就能用。
+            - **Windows**：`pdf-cutter-…-windows-setup.exe` 是安装版；`pdf-cutter-…-windows-portable.exe` 免安装。需要 WebView2，安装版会在缺失时联网安装；免安装版需系统已安装 WebView2。
             - **macOS（Apple 芯片，M1 及以后）**：`pdf-cutter-…-mac-arm64.dmg`
             - **macOS（Intel 芯片）**：`pdf-cutter-…-mac-x64.dmg`
 

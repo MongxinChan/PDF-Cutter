@@ -26,6 +26,7 @@ jobs:
         run: |
           mkdir -p _site/lib _site/build
           cp index.html _site/
+          cp desktop.js _site/
           cp build/icon.svg _site/build/icon.svg
           curl -fsSL https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js -o _site/lib/pdf-lib.min.js \
             || curl -fsSL https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js -o _site/lib/pdf-lib.min.js

@@ -2,5 +2,12 @@ node_modules/
 dist/
 lib/
 build/icon.png
+src-tauri/target/
+src-tauri/icons/
+src-tauri/gen/
+web-dist/
+.tools/
+test-results/
+playwright-report/
 .DS_Store
 Thumbs.db

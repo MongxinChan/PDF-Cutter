@@ -1,0 +1,7 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "main",
+  "description": "仅允许主窗口调用核心接口；文件导出由限定目录的 Rust 命令处理。",
+  "windows": ["main"],
+  "permissions": ["core:default"]
+}

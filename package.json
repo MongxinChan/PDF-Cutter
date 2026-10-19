@@ -3,63 +3,25 @@
   "productName": "PDF 裁纸台",
   "version": "1.0.0",
   "description": "把大 PDF 按页数、大小或自定义范围切成小份，方便分批上传给 Claude。",
-  "main": "electron/main.js",
   "author": "Mongxin",
   "license": "MIT",
   "private": true,
   "scripts": {
     "postinstall": "node scripts/copy-libs.js",
-    "icon": "node scripts/make-icon.js",
-    "start": "electron .",
-    "dist": "npm run icon && electron-builder",
-    "dist:ci": "npm run icon && electron-builder --publish never",
-    "dist:mac": "npm run icon && electron-builder --mac",
-    "dist:win": "npm run icon && electron-builder --win"
+    "icon": "tauri icon build/icon.svg --output src-tauri/icons",
+    "prepare:web": "node scripts/prepare-web.js",
+    "start": "npm run icon && tauri dev",
+    "dist": "npm run icon && tauri build -- --locked && node scripts/collect-artifacts.js",
+    "dist:ci": "npm run dist",
+    "dist:mac": "npm run icon && tauri build --bundles dmg -- --locked && node scripts/collect-artifacts.js",
+    "dist:win": "npm run icon && tauri build --bundles nsis -- --locked && node scripts/collect-artifacts.js",
+    "test": "playwright test",
+    "tauri": "tauri"
   },
   "devDependencies": {
-    "electron": "^44.4.5",
-    "electron-builder": "^26.15.3",
+    "@playwright/test": "^1.58.2",
+    "@tauri-apps/cli": "2.12.3",
     "jszip": "3.10.1",
-    "pdf-lib": "1.17.1",
-    "sharp": "^0.35.5"
-  },
-  "build": {
-    "appId": "io.github.mongxin.pdfcutter",
-    "productName": "PDF 裁纸台",
-    "copyright": "Copyright © 2026 Mongxin",
-    "directories": {
-      "output": "dist",
-      "buildResources": "build"
-    },
-    "files": [
-      "index.html",
-      "lib/**/*",
-      "electron/**/*",
-      "package.json"
-    ],
-    "mac": {
-      "category": "public.app-category.productivity",
-      "target": [
-        { "target": "dmg", "arch": ["arm64", "x64"] }
-      ],
-      "artifactName": "pdf-cutter-${version}-mac-${arch}.${ext}"
-    },
-    "dmg": {
-      "title": "PDF 裁纸台 ${version}"
-    },
-    "win": {
-      "target": [
-        { "target": "nsis", "arch": ["x64"] },
-        { "target": "portable", "arch": ["x64"] }
-      ]
-    },
-    "nsis": {
-      "oneClick": false,
-      "allowToChangeInstallationDirectory": true,
-      "artifactName": "pdf-cutter-${version}-windows-setup.${ext}"
-    },
-    "portable": {
-      "artifactName": "pdf-cutter-${version}-windows-portable.${ext}"
-    }
+    "pdf-lib": "1.17.1"
   }
 }

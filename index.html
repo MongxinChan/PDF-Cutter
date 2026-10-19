@@ -5,10 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>PDF 裁纸台</title>
 <link rel="icon" type="image/svg+xml" href="build/icon.svg">
-<script>
-  // Running inside the desktop app (Electron)? Toggle app-only / web-only text.
-  if (/Electron/.test(navigator.userAgent)) document.documentElement.classList.add("is-app");
-</script>
+<script src="desktop.js"></script>
 <style>
   :root {
     color-scheme: light;
@@ -451,6 +448,7 @@
   })();
 
   /* ---------------- library loading ---------------- */
+  const isDesktop = window.pdfDesktop.isDesktop;
   const PDFLIB_SRC = [
     "lib/pdf-lib.min.js",
     "https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js",
@@ -483,7 +481,8 @@
     });
   }
   async function loadFirst(urls, ok) {
-    for (const u of urls) {
+    // Desktop releases embed both libraries and never fall back to a CDN.
+    for (const u of (isDesktop ? urls.slice(0, 1) : urls)) {
       if (ok()) return true;
       try { await loadScript(u); if (ok()) return true; } catch (e) { /* try next */ }
     }
@@ -530,6 +529,7 @@
   let pageCount = 0;
   let parts = [];          // {start, end, bytes, name, url, warn}
   let busy = false;
+  let exporting = false;
   let pendingFile = null;
 
   const CLAUDE_MB = 30, CLAUDE_PAGES = 100;
@@ -645,13 +645,13 @@
   }
 
   function refresh() {
-    goBtn.disabled = busy || !src || !pdfReady;
+    goBtn.disabled = busy || exporting || !src || !pdfReady;
     if (!src) {
       summary.textContent = "";
       matTitle.textContent = "切分预览";
       return;
     }
-    if (busy) return;
+    if (busy || exporting) return;
     const p = currentPlan();
     if (p.error) {
       setStatus(p.error, true);
@@ -703,6 +703,13 @@
       a.href = p.url;
       a.download = p.name;
       a.textContent = "下载";
+      a.addEventListener("click", function (event) {
+        if (!isDesktop) return;
+        event.preventDefault();
+        exportFiles(async function () {
+          await window.pdfDesktop.save(p.bytes, p.name);
+        });
+      });
       li.append(name, meta, warn, a);
       slips.appendChild(li);
     });
@@ -760,7 +767,7 @@
   }
 
   fileInput.addEventListener("change", function () {
-    if (!busy) openFile(fileInput.files[0]);
+    if (!busy && !exporting) openFile(fileInput.files[0]);
     fileInput.value = "";
   });
   ["dragenter", "dragover"].forEach(function (ev) {
@@ -774,7 +781,7 @@
   window.addEventListener("drop", function (e) {
     e.preventDefault();
     const f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
-    if (f && !busy) openFile(f);
+    if (f && !busy && !exporting) openFile(f);
   });
 
   /* ---------------- settings ---------------- */
@@ -864,7 +871,7 @@
   }
 
   goBtn.addEventListener("click", async function () {
-    if (!src || busy) return;
+    if (!src || busy || exporting) return;
     const p = currentPlan();
     if (p.error) { setStatus(p.error, true); return; }
     clearResults();
@@ -900,33 +907,55 @@
     document.body.appendChild(a); a.click(); a.remove();
   }
 
-  dlAllBtn.addEventListener("click", async function () {
-    dlAllBtn.disabled = true;
-    for (const p of parts) {
-      triggerDownload(p.url, p.name);
-      await new Promise(function (r) { setTimeout(r, 500); });
+  async function exportFiles(action) {
+    if (busy || exporting) return;
+    exporting = true;
+    const controls = Array.from(document.querySelectorAll("input, textarea, button"));
+    const disabled = controls.map(function (control) { return control.disabled; });
+    controls.forEach(function (control) { control.disabled = true; });
+    setStatus(isDesktop ? "正在保存文件…" : "正在准备下载…");
+    try {
+      await action();
+      setStatus(isDesktop ? "已保存到“下载 / PDF裁纸台”。" : "已发起下载。");
+      if (isDesktop) {
+        try { await window.pdfDesktop.reveal(); }
+        catch (e) { setStatus("文件已保存到“下载 / PDF裁纸台”，但未能打开文件夹：" + e, true); }
+      }
+    } catch (e) {
+      setStatus("导出失败：" + (e && e.message ? e.message : e) + "。已保存的文件仍在下载文件夹，可以重试。", true);
+    } finally {
+      exporting = false;
+      controls.forEach(function (control, index) { control.disabled = disabled[index]; });
     }
-    dlAllBtn.disabled = false;
+  }
+
+  dlAllBtn.addEventListener("click", function () {
+    if (!parts.length) return;
+    exportFiles(async function () {
+      for (const p of parts) {
+        if (isDesktop) await window.pdfDesktop.save(p.bytes, p.name);
+        else {
+          triggerDownload(p.url, p.name);
+          await new Promise(function (r) { setTimeout(r, 500); });
+        }
+      }
+    });
   });
 
-  zipBtn.addEventListener("click", async function () {
+  zipBtn.addEventListener("click", function () {
     if (!zipReady || !parts.length) return;
-    zipBtn.disabled = true;
-    const label = zipBtn.textContent;
-    zipBtn.textContent = "正在打包…";
-    try {
+    exportFiles(async function () {
       const zip = new JSZip();
       parts.forEach(function (p) { zip.file(p.name, p.bytes); });
       const blob = await zip.generateAsync({ type: "blob", compression: "STORE" });
-      const url = URL.createObjectURL(blob);
-      triggerDownload(url, baseName() + "_切分.zip");
-      setTimeout(function () { URL.revokeObjectURL(url); }, 30000);
-    } catch (e) {
-      setStatus("打包失败：" + (e && e.message ? e.message : e) + "。可以用“逐个下载全部”。", true);
-    } finally {
-      zipBtn.textContent = label;
-      zipBtn.disabled = false;
-    }
+      const name = baseName() + "_切分.zip";
+      if (isDesktop) await window.pdfDesktop.save(blob, name);
+      else {
+        const url = URL.createObjectURL(blob);
+        triggerDownload(url, name);
+        setTimeout(function () { URL.revokeObjectURL(url); }, 30000);
+      }
+    });
   });
 
   refresh();

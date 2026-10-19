@@ -27,4 +27,4 @@ for (const [from, to] of files) {
   console.log(`[copy-libs] lib/${to}`);
 }
 
-if (missing) process.exitCode = 0; // don't break `npm install`
+if (missing) throw new Error("浏览器组件缺失，请重新安装依赖后再构建。");
