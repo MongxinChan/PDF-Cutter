@@ -100,7 +100,17 @@ jobs:
           files: out/*
           name: PDF 裁纸台 ${{ github.ref_name }}
           body: |
-            桌面版现已使用 Tauri 2，复用系统 WebView，大幅缩小安装包。保留离线 PDF 切分、批量保存、ZIP 导出和同名文件保护。
+            ## v1.0.2 更新
+
+            - 新增英文界面，右上角可切换简体中文 / English，并记住语言选择。
+            - 切换语言保留已选 PDF、切分设置和结果；进度、校验提示和下载操作同步切换语言。
+            - 优化小窗口布局；保留 Tauri 2 轻量打包、离线切分、批量保存、ZIP 导出和同名文件保护。
+
+            ## What's new
+
+            - English and Simplified Chinese interfaces with a language button in the top-right corner and a saved language preference.
+            - Switch languages without losing your PDF, settings or split files. Progress, validation and download messages are translated too.
+            - Improved layout for narrow windows. Local PDF processing, batch saving and ZIP export remain available offline.
 
             ## 下载哪个文件？
 
@@ -109,3 +119,5 @@ jobs:
             - **macOS（Intel 芯片）**：`pdf-cutter-…-mac-x64.dmg`
 
             这个 App 没有购买开发者签名证书，第一次打开时系统可能会拦截，处理方法见仓库 README 的“第一次打开被拦截”一节。
+
+            Windows requires WebView2; the installer downloads it if missing. macOS packages are provided for Apple Silicon and Intel. These apps are unsigned; see the English README for first-launch instructions.

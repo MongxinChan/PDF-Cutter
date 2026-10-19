@@ -23,9 +23,7 @@ A lightweight, free and open-source **PDF splitter** for the browser, Windows an
 
 *Actual app screenshot using a generated sample handout: 120 pages → 3 files of 40 pages each.*
 
-The web app supports English and Simplified Chinese. Use the language button in the top-right corner to switch without losing your selected PDF, settings or results. Links from this README open the English interface directly. Your language choice is remembered when browser storage is available; an explicit `?lang=en` or `?lang=zh-CN` link takes priority.
-
-The published v1.0.1 desktop installers still use the Chinese interface. Bilingual support is included in the current source for future desktop builds.
+The web app and desktop app (v1.0.2 and later) support English and Simplified Chinese. Use the language button in the top-right corner to switch without losing your selected PDF, settings or results. Links from this README open the English web interface directly. Your language choice is remembered when local storage is available; an explicit `?lang=en` or `?lang=zh-CN` link takes priority.
 
 ## What can you use it for?
 

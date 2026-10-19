@@ -2421,7 +2421,7 @@ dependencies = [
 
 [[package]]
 name = "pdf-cutter"
-version = "1.0.1"
+version = "1.0.2"
 dependencies = [
  "percent-encoding",
  "tauri",
