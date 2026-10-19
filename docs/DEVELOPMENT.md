@@ -1,5 +1,7 @@
 # 开发与构建
 
+**简体中文** | [English](DEVELOPMENT.en.md)
+
 [返回项目介绍](../README.md)
 
 建议使用 Node.js 24 LTS，并安装 [Rust stable](https://rustup.rs/)。平台构建依赖见 [Tauri 前置要求](https://v2.tauri.app/start/prerequisites/)：

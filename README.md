@@ -1,5 +1,7 @@
 # PDF 裁纸台 · PDF Splitter
 
+**简体中文** | [English](README.en.md)
+
 轻量、免费开源的 **PDF 拆分工具**。按页数、文件大小或自定义页码范围切分 PDF，文件在本地处理，无需注册，也不会上传到服务器。
 
 A lightweight, privacy-friendly PDF splitter for the browser, Windows and macOS. Split by page count, file size or custom page ranges — your PDF stays on your device.
