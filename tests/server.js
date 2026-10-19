@@ -4,7 +4,8 @@ const path = require("node:path");
 
 const root = path.resolve(__dirname, "../web-dist");
 http.createServer((request, response) => {
-  const file = path.resolve(root, "." + (request.url === "/" ? "/index.html" : request.url.split("?")[0]));
+  const pathname = new URL(request.url, "http://127.0.0.1").pathname;
+  const file = path.resolve(root, "." + (pathname === "/" ? "/index.html" : pathname));
   if (!file.startsWith(root + path.sep)) { response.writeHead(403).end(); return; }
   fs.readFile(file, (error, bytes) => {
     if (error) { response.writeHead(404).end(); return; }

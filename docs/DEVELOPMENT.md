@@ -45,6 +45,7 @@ cargo test --locked --manifest-path src-tauri/Cargo.toml
 
 ```
 index.html                   网页本体（网页版和桌面版共用）
+i18n.js                      中英文文案、URL 语言入口和本地语言偏好
 desktop.js                   Tauri 二进制保存接口及环境识别
 src-tauri/src/               桌面入口、原生文件保存和重名保护
 src-tauri/tauri.conf.json     窗口、资源、安全和安装包配置

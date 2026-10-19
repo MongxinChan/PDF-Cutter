@@ -72,6 +72,14 @@ test("桌面单份、批量和 ZIP 导出保留原始数据且每批只打开一
   expect(saved[4].name).toBe("测试_切分.zip");
   const zip = await JSZip.loadAsync(Uint8Array.from(saved[4].bytes));
   expect(Object.keys(zip.files)).toHaveLength(3);
+  await page.locator("#languageToggle").click();
+  await expect(page.locator(".save-hint")).toContainText("Downloads / PDF裁纸台");
+  await page.locator("#zipAll").click();
+  await expect.poll(() => page.evaluate(() => window.reveals)).toBe(4);
+  await expect(page.locator("#status")).toHaveText("Saved to “Downloads / PDF裁纸台”.");
+  saved = await page.evaluate(() => window.savedFiles);
+  expect(saved[5].name).toBe("测试_split.zip");
+  expect(Object.keys((await JSZip.loadAsync(Uint8Array.from(saved[5].bytes))).files)).toHaveLength(3);
 });
 
 test("保存失败可重试，打开文件夹失败不会误报文件保存失败", async ({ page }) => {

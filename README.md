@@ -6,7 +6,7 @@
 
 A lightweight, privacy-friendly PDF splitter for the browser, Windows and macOS. Split by page count, file size or custom page ranges — your PDF stays on your device.
 
-**[在线体验](https://www.loners.site/PDF-Cutter/) · [下载桌面版](https://github.com/MongxinChan/PDF-Cutter/releases/latest) · [反馈问题](https://github.com/MongxinChan/PDF-Cutter/issues)**
+**[在线体验](https://www.loners.site/PDF-Cutter/?lang=zh-CN) · [下载桌面版](https://github.com/MongxinChan/PDF-Cutter/releases/latest) · [反馈问题](https://github.com/MongxinChan/PDF-Cutter/issues)**
 
 [![最新版本](https://img.shields.io/github/v/release/MongxinChan/PDF-Cutter?label=release)](https://github.com/MongxinChan/PDF-Cutter/releases/latest)
 [![MIT License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
@@ -25,6 +25,8 @@ A lightweight, privacy-friendly PDF splitter for the browser, Windows and macOS.
 
 *实际界面截图，使用生成的示例讲义演示：120 页 → 3 份，每份 40 页。*
 
+网页版支持简体中文和英文，右上角可随时切换，已选文件、设置和切分结果会保留。英文 README 的体验链接直接进入英文界面；浏览器允许存储时会记住手动选择，链接中的语言参数优先。已发布的 v1.0.1 桌面安装包仍为中文界面，当前源码已包含双语支持。
+
 ## 适合哪些场景？
 
 - **整理教材和课程讲义**：按章节提取页码范围，或每隔固定页数拆成一份。
@@ -41,7 +43,7 @@ A lightweight, privacy-friendly PDF splitter for the browser, Windows and macOS.
 
 ## 三步上手
 
-1. 打开 **[在线版](https://www.loners.site/PDF-Cutter/)** 或桌面 App，拖入一个 PDF，也可以点击选择文件。
+1. 打开 **[在线版](https://www.loners.site/PDF-Cutter/?lang=zh-CN)** 或桌面 App，拖入一个 PDF，也可以点击选择文件。
 2. 选择拆分方式并填写参数，查看页码范围预览。
 3. 点击“开始切分”，完成后下载单份文件，或点击“打包下载 ZIP”。
 

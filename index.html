@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>PDF 裁纸台</title>
 <link rel="icon" type="image/svg+xml" href="build/icon.svg">
+<script src="i18n.js"></script>
 <script src="desktop.js"></script>
 <style>
   :root {
@@ -46,6 +47,10 @@
     align-items: baseline;
     gap: 8px 24px;
   }
+  #languageToggle { margin-left: auto; border: 1px solid var(--mat); border-radius: 6px; background: #fff; color: var(--mat); padding: 6px 12px; cursor: pointer; flex-shrink: 0; }
+  #languageToggle:hover { background: #E6F0EA; }
+  .top .intro { flex-basis: 100%; max-width: none; }
+  .bench > * { min-width: 0; }
   .top h1 {
     margin: 0;
     font-size: 40px;
@@ -290,7 +295,7 @@
   .slip .name { font-size: 14px; word-break: break-all; }
   .slip .name small { display: block; color: var(--muted); font-size: 12px; }
   .slip .meta { font-family: var(--num); font-size: 15px; text-align: right; white-space: nowrap; }
-  .slip .warn { font-size: 12px; color: var(--danger); white-space: nowrap; }
+  .slip .warn { font-size: 12px; color: var(--danger); }
   .slip a {
     font-size: 14px;
     color: var(--mat);
@@ -304,7 +309,11 @@
   .slip a:hover { background: #E6F0EA; }
   @media (max-width: 560px) {
     .slip { grid-template-columns: 1fr auto; }
+    .slip .name { grid-column: 1 / -1; }
+    .slip .meta { grid-column: 1; text-align: left; }
+    .slip a { grid-column: 2; grid-row: 2; }
     .slip .warn { grid-column: 1 / -1; }
+    .slip .warn:empty { display: none; }
   }
 
   .foot {
@@ -339,87 +348,88 @@
 <body>
 
 <header class="top">
-  <h1><span class="num">PDF</span>裁纸台</h1>
-  <p>把大 PDF 切成几份小文件，方便分批上传给 Claude。<span class="web-only">文件只在你的浏览器里处理，不会上传到任何服务器。</span><span class="app-only">文件只在这台电脑上处理，不会上传。</span></p>
-  <p class="web-only" id="deskWrap" hidden><a class="desk-link" id="deskLink" href="#">下载桌面版（Windows / macOS）</a></p>
+  <h1><span class="num">PDF</span><span data-i18n="brand">裁纸台</span></h1>
+  <button type="button" id="languageToggle" lang="en" aria-label="Switch to English">English</button>
+  <p class="intro"><span data-i18n="intro">把大 PDF 切成几份小文件，方便分批上传给 Claude。</span><span class="web-only" data-i18n="privacyWeb">文件只在你的浏览器里处理，不会上传到任何服务器。</span><span class="app-only" data-i18n="privacyApp">文件只在这台电脑上处理，不会上传。</span></p>
+  <p class="web-only" id="deskWrap" hidden><a class="desk-link" id="deskLink" href="#" data-i18n="desktop">下载桌面版（Windows / macOS）</a></p>
 </header>
 
 <main class="bench">
-  <section class="controls" aria-label="切分设置">
+  <section class="controls" aria-label="切分设置" data-i18n-aria="settings">
     <label class="drop" id="drop">
       <input type="file" id="file" accept="application/pdf,.pdf">
       <strong id="dropTitle">选择 PDF 文件</strong>
-      <span id="dropSub">点击这里，或把文件拖进来</span>
+      <span id="dropSub" data-i18n="drop">点击这里，或把文件拖进来</span>
       <div class="file-meta" id="fileMeta">
         <div class="file-name" id="fileName"></div>
         <div class="file-stats">
-          <div><b id="filePages">0</b>页</div>
-          <div><b id="fileSize">0</b>大小</div>
+          <div><b id="filePages">0</b><span data-i18n="pages">页</span></div>
+          <div><b id="fileSize">0</b><span data-i18n="size">大小</span></div>
         </div>
       </div>
     </label>
 
-    <div class="modes" role="radiogroup" aria-label="切分方式">
+    <div class="modes" role="radiogroup" aria-label="切分方式" data-i18n-aria="mode">
       <input type="radio" name="mode" id="m-pages" value="pages" checked>
-      <label for="m-pages">按页数</label>
+      <label for="m-pages" data-i18n="byPages">按页数</label>
       <input type="radio" name="mode" id="m-size" value="size">
-      <label for="m-size">按大小</label>
+      <label for="m-size" data-i18n="bySize">按大小</label>
       <input type="radio" name="mode" id="m-ranges" value="ranges">
-      <label for="m-ranges">自定义范围</label>
+      <label for="m-ranges" data-i18n="byRanges">自定义范围</label>
     </div>
 
     <div class="panel show" data-panel="pages">
       <div class="field">
-        <label for="perPages">每份多少页</label>
+        <label for="perPages" data-i18n="perPages">每份多少页</label>
         <input type="number" id="perPages" min="1" step="1" value="50">
       </div>
-      <p class="hint">最后一份可能少于这个页数。</p>
+      <p class="hint" data-i18n="pagesHint">最后一份可能少于这个页数。</p>
     </div>
 
     <div class="panel" data-panel="size">
       <div class="field">
-        <label for="maxMB">每份不超过（MB）</label>
+        <label for="maxMB" data-i18n="maxMB">每份不超过（MB）</label>
         <input type="number" id="maxMB" min="0.1" step="0.1" value="30">
       </div>
       <div class="field">
-        <label for="maxPages">每份最多页数（留空表示不限）</label>
+        <label for="maxPages" data-i18n="maxPages">每份最多页数（留空表示不限）</label>
         <input type="number" id="maxPages" min="1" step="1" value="100">
       </div>
-      <button type="button" class="preset" id="claudePreset">使用 Claude 常用上限：30 MB、100 页</button>
-      <p class="hint">会实际试切来确认每份大小，页数多的文件需要多等一会儿。单页本身就超过上限时，这一页会单独成一份。</p>
+      <button type="button" class="preset" id="claudePreset" data-i18n="preset">使用 Claude 常用上限：30 MB、100 页</button>
+      <p class="hint" data-i18n="sizeHint">会实际试切来确认每份大小，页数多的文件需要多等一会儿。单页本身就超过上限时，这一页会单独成一份。</p>
     </div>
 
     <div class="panel" data-panel="ranges">
       <div class="field">
-        <label for="ranges">页码范围，用逗号分隔</label>
+        <label for="ranges" data-i18n="ranges">页码范围，用逗号分隔</label>
         <textarea id="ranges" placeholder="1-20, 21-45, 46-"></textarea>
       </div>
-      <p class="hint">“46-” 表示从第 46 页到最后一页；单独写 “7” 表示只要第 7 页。每个范围生成一份文件。</p>
+      <p class="hint" data-i18n="rangesHint">“46-” 表示从第 46 页到最后一页；单独写 “7” 表示只要第 7 页。每个范围生成一份文件。</p>
     </div>
 
-    <button type="button" class="go" id="go" disabled>开始切分</button>
+    <button type="button" class="go" id="go" disabled data-i18n="split">开始切分</button>
     <div class="progress" id="progress"><i id="progressBar"></i></div>
     <p class="status" id="status" role="status" aria-live="polite"></p>
   </section>
 
-  <section class="mat" aria-label="切分预览与结果">
+  <section class="mat" aria-label="切分预览与结果" data-i18n-aria="previewRegion">
     <div class="mat-head">
       <h2 id="matTitle">切分预览</h2>
       <div class="summary" id="summary"></div>
     </div>
 
-    <div class="empty" id="empty">选好 PDF 后，这里会显示每一份包含哪些页。</div>
+    <div class="empty" id="empty" data-i18n="empty">选好 PDF 后，这里会显示每一份包含哪些页。</div>
     <div class="strip" id="strip" hidden></div>
 
     <div class="results" id="results">
       <div class="results-bar">
-        <h3>切好的文件</h3>
+        <h3 data-i18n="files">切好的文件</h3>
         <div class="bar-actions">
-          <button type="button" class="btn-light" id="zipAll">打包下载 ZIP</button>
-          <button type="button" class="btn-ghost" id="dlAll">逐个下载全部</button>
+          <button type="button" class="btn-light" id="zipAll" data-i18n="zip">打包下载 ZIP</button>
+          <button type="button" class="btn-ghost" id="dlAll" data-i18n="downloadAll">逐个下载全部</button>
         </div>
       </div>
-      <p class="save-hint app-only">点“下载”后文件会保存到电脑的“下载 / PDF裁纸台”文件夹，并自动打开这个文件夹。</p>
+      <p class="save-hint app-only" data-i18n="saveHint">点“下载”后文件会保存到电脑的“下载 / PDF裁纸台”文件夹，并自动打开这个文件夹。</p>
       <ol class="slips" id="slips"></ol>
     </div>
   </section>
@@ -427,25 +437,20 @@
 
 <footer class="foot">
   <p id="libState">正在加载 PDF 处理组件…</p>
-  <p class="web-only">离线使用：把 pdf-lib.min.js 和 jszip.min.js 放进本页面旁边的 lib 文件夹，页面会优先使用本地文件。</p>
-  <p>Claude 的上传限制可能会调整，以你上传时的提示为准；超过 100 页的 PDF，Claude 可能只读取文字而不看图表。</p>
+  <p class="web-only" data-i18n="offline">离线使用：把 pdf-lib.min.js 和 jszip.min.js 放进本页面旁边的 lib 文件夹，页面会优先使用本地文件。</p>
+  <p data-i18n="claudeHint">Claude 的上传限制可能会调整，以你上传时的提示为准；超过 100 页的 PDF，Claude 可能只读取文字而不看图表。</p>
 </footer>
 
 <script>
 (function () {
   "use strict";
+  const { t, message, applyLanguage, setLanguage } = window.pdfI18n;
+  applyLanguage();
+  document.getElementById("libState").textContent = t("loading");
+  document.getElementById("dropTitle").textContent = t("choose");
 
-  /* ---------------- desktop download link (only on GitHub Pages) ---------------- */
-  (function () {
-    const host = location.hostname;
-    const m = host.match(/^([^.]+)\.github\.io$/i);
-    if (!m) return;
-    const repo = location.pathname.split("/").filter(Boolean)[0];
-    if (!repo) return;
-    document.getElementById("deskLink").href =
-      "https://github.com/" + m[1] + "/" + repo + "/releases/latest";
-    document.getElementById("deskWrap").hidden = false;
-  })();
+  document.getElementById("deskLink").href = "https://github.com/MongxinChan/PDF-Cutter/releases/latest";
+  document.getElementById("deskWrap").hidden = window.pdfDesktop.isDesktop;
 
   /* ---------------- library loading ---------------- */
   const isDesktop = window.pdfDesktop.isDesktop;
@@ -490,28 +495,30 @@
   }
 
   let pdfReady = false;
+  let pdfLoaded = false;
   let zipReady = false;
   const libState = document.getElementById("libState");
 
   loadFirst(PDFLIB_SRC, function () { return !!window.PDFLib; }).then(function (ok) {
     pdfReady = ok;
+    pdfLoaded = true;
     if (ok) {
-      libState.textContent = "PDF 处理组件已就绪。";
+      libState.textContent = t("ready");
       libState.classList.remove("err");
     } else {
-      libState.textContent = "PDF 处理组件加载失败：请检查网络后刷新，或按下面的方法放入本地 lib 文件。";
+      libState.textContent = t("loadFailed");
       libState.classList.add("err");
     }
     if (pendingFile) {
       const f = pendingFile; pendingFile = null;
-      if (ok) openFile(f); else setStatus("PDF 处理组件没加载成功，暂时无法打开文件。", true);
+      if (ok) openFile(f); else setStatus(message("pdfUnavailable"), true);
     }
     refresh();
   });
   loadFirst(JSZIP_SRC, function () { return !!window.JSZip; }).then(function (ok) {
     zipReady = ok;
     zipBtn.disabled = !ok;
-    zipBtn.title = ok ? "" : "ZIP 组件没加载成功，请用“逐个下载全部”";
+    zipBtn.title = ok ? "" : t("zipUnavailable");
   });
 
   /* ---------------- elements ---------------- */
@@ -540,8 +547,11 @@
     if (b >= MB) return (b / MB).toFixed(b >= 100 * MB ? 0 : 1) + " MB";
     return Math.max(1, Math.round(b / 1024)) + " KB";
   }
+  let statusMessage = "";
+  let lastPlan = [], lastStripOptions = {}, lastSummary = null;
   function setStatus(msg, isErr) {
-    statusEl.textContent = msg || "";
+    statusMessage = msg;
+    statusEl.textContent = typeof msg === "function" ? msg() : (msg || "");
     statusEl.classList.toggle("err", !!isErr);
   }
   function setProgress(frac) {
@@ -563,10 +573,16 @@
     return out;
   }
 
+  function localizedError(key, values) {
+    const error = new Error(t(key, values));
+    error.localized = message(key, values);
+    return error;
+  }
+
   function parseRanges(text, n) {
     text = text.replace(/\s*([-–—~～])\s*/g, "$1");
     const items = text.split(/[,，;；\s]+/).map(function (t) { return t.trim(); }).filter(Boolean);
-    if (!items.length) throw new Error("请填写至少一个页码范围，例如 1-20");
+    if (!items.length) throw localizedError("rangeRequired", {});
     const out = [];
     for (const it of items) {
       const m = it.match(/^(\d+)?\s*[-–—~～]\s*(\d+)?$/);
@@ -575,10 +591,10 @@
       else if (m && (m[1] || m[2])) {
         a = m[1] ? parseInt(m[1], 10) : 1;
         b = m[2] ? parseInt(m[2], 10) : n;
-      } else throw new Error("看不懂 “" + it + "”，请写成 1-20 这样的格式");
-      if (a < 1 || b < 1) throw new Error("页码从 1 开始：“" + it + "”");
-      if (a > n || b > n) throw new Error("“" + it + "” 超出了总页数 " + n);
-      if (a > b) throw new Error("“" + it + "” 的起始页大于结束页");
+      } else throw localizedError("rangeInvalid", {range: it});
+      if (a < 1 || b < 1) throw localizedError("rangeZero", {range: it});
+      if (a > n || b > n) throw localizedError("rangeBeyond", {range: it, total: n});
+      if (a > b) throw localizedError("rangeReversed", {range: it});
       out.push([a - 1, b - 1]);
     }
     return out;
@@ -597,18 +613,18 @@
     const m = mode();
     if (m === "pages") {
       const per = readInt("perPages");
-      if (!per || per < 1 || !Number.isInteger(per)) return { error: "每份页数需要是大于 0 的整数" };
+      if (!per || per < 1 || !Number.isInteger(per)) return { error: message("pagesInvalid") };
       return { plan: chunk(pageCount, per), estimated: false };
     }
     if (m === "ranges") {
       try { return { plan: parseRanges($("ranges").value, pageCount), estimated: false }; }
-      catch (e) { return { error: e.message }; }
+      catch (e) { return { error: e.localized || e.message }; }
     }
     // size
     const mb = readInt("maxMB");
     const mp = readInt("maxPages");
-    if (!mb || mb <= 0) return { error: "请填写每份的大小上限（MB）" };
-    if (mp !== null && (!Number.isInteger(mp) || mp < 1)) return { error: "每份最多页数需要是大于 0 的整数，或留空" };
+    if (!mb || mb <= 0) return { error: message("sizeInvalid") };
+    if (mp !== null && (!Number.isInteger(mp) || mp < 1)) return { error: message("maxPagesInvalid") };
     const avg = fileSize / pageCount;
     let per = Math.max(1, Math.floor(mb * MB / avg));
     if (mp) per = Math.min(per, mp);
@@ -618,6 +634,8 @@
   /* ---------------- rendering ---------------- */
   function renderStrip(plan, opts) {
     opts = opts || {};
+    lastPlan = plan;
+    lastStripOptions = opts;
     strip.innerHTML = "";
     strip.hidden = !plan.length;
     empty.hidden = !!plan.length;
@@ -630,25 +648,30 @@
       piece.className = "piece" + (opts.bad && opts.bad[i] ? " bad" : "");
       const tag = document.createElement("span");
       tag.className = "tag";
-      tag.textContent = (i + 1) + "：" + (r[0] + 1) + (r[1] > r[0] ? "–" + (r[1] + 1) : "");
+      tag.textContent = (i + 1) + ": " + (r[0] + 1) + (r[1] > r[0] ? "–" + (r[1] + 1) : "");
       piece.appendChild(tag);
       const pages = document.createElement("div");
       pages.className = "pages";
       const count = r[1] - r[0] + 1;
       pages.innerHTML = "<i></i>".repeat(count);
       piece.appendChild(pages);
-      piece.title = "第 " + (i + 1) + " 份：第 " + (r[0] + 1) + "–" + (r[1] + 1) + " 页，共 " + count + " 页";
+      piece.title = t("piece", {part: i + 1, start: r[0] + 1, end: r[1] + 1, count: count});
       frag.appendChild(piece);
     });
     strip.appendChild(frag);
     if (opts.animate) { void strip.offsetWidth; strip.classList.add("cut-in"); }
   }
 
+  function renderSummary(key, count) {
+    lastSummary = key ? {key, count} : null;
+    summary.innerHTML = key ? t(key, {count: "<b>" + count + "</b>"}) : "";
+  }
+
   function refresh() {
     goBtn.disabled = busy || exporting || !src || !pdfReady;
     if (!src) {
-      summary.textContent = "";
-      matTitle.textContent = "切分预览";
+      renderSummary(null);
+      matTitle.textContent = t("preview");
       return;
     }
     if (busy || exporting) return;
@@ -659,8 +682,8 @@
       return;
     }
     setStatus("");
-    matTitle.textContent = "切分预览";
-    summary.innerHTML = (p.estimated ? "估计切成 " : "将切成 ") + "<b>" + p.plan.length + "</b> 份";
+    matTitle.textContent = t("preview");
+    renderSummary(p.estimated ? "estimated" : "planned", p.plan.length);
     renderStrip(p.plan, { estimated: p.estimated });
     clearResults();
   }
@@ -678,11 +701,11 @@
     parts.forEach(function (p, i) {
       const count = p.end - p.start + 1;
       p.name = baseName() + "_part" + pad(i + 1, w) + "_p" + (p.start + 1) + "-" + (p.end + 1) + ".pdf";
-      p.url = URL.createObjectURL(new Blob([p.bytes], { type: "application/pdf" }));
+      p.url = p.url || URL.createObjectURL(new Blob([p.bytes], { type: "application/pdf" }));
       const warns = [];
-      if (p.oversize) warns.push("单页已超过大小上限");
-      if (p.bytes.length > CLAUDE_MB * MB) warns.push("超过 30 MB");
-      if (count > CLAUDE_PAGES) warns.push("超过 100 页");
+      if (p.oversize) warns.push(t("oversize"));
+      if (p.bytes.length > CLAUDE_MB * MB) warns.push(t("overMB"));
+      if (count > CLAUDE_PAGES) warns.push(t("overPages"));
       p.warn = warns.length > 0;
 
       const li = document.createElement("li");
@@ -691,18 +714,18 @@
       name.className = "name";
       name.textContent = p.name;
       const sm = document.createElement("small");
-      sm.textContent = "第 " + (p.start + 1) + "–" + (p.end + 1) + " 页";
+      sm.textContent = t("pageRange", {start: p.start + 1, end: p.end + 1});
       name.appendChild(sm);
       const meta = document.createElement("div");
       meta.className = "meta";
-      meta.textContent = count + " 页  " + fmtSize(p.bytes.length);
+      meta.textContent = t("fileStats", {count: count, size: fmtSize(p.bytes.length)});
       const warn = document.createElement("div");
       warn.className = "warn";
-      warn.textContent = warns.join("，");
+      warn.textContent = warns.join(" · ");
       const a = document.createElement("a");
       a.href = p.url;
       a.download = p.name;
-      a.textContent = "下载";
+      a.textContent = t("download");
       a.addEventListener("click", function (event) {
         if (!isDesktop) return;
         event.preventDefault();
@@ -714,8 +737,8 @@
       slips.appendChild(li);
     });
     results.classList.add("show");
-    matTitle.textContent = "切分结果";
-    summary.innerHTML = "已切成 <b>" + parts.length + "</b> 份";
+    matTitle.textContent = t("results");
+    renderSummary("finished", parts.length);
     renderStrip(parts.map(function (p) { return [p.start, p.end]; }), {
       animate: true,
       bad: parts.map(function (p) { return p.warn; })
@@ -726,12 +749,12 @@
   async function openFile(file) {
     if (!file) return;
     if (!/\.pdf$/i.test(file.name) && file.type !== "application/pdf") {
-      setStatus("这不是 PDF 文件，请重新选择。", true);
+      setStatus(message("notPDF"), true);
       return;
     }
     if (!pdfReady) {
       pendingFile = file;
-      setStatus("组件还在加载，加载完成后会自动打开这个文件…");
+      setStatus(message("pending"));
       return;
     }
     clearResults();
@@ -739,7 +762,7 @@
     busy = true;
     renderStrip([]);
     refresh();
-    setStatus("正在读取 " + file.name + " …");
+    setStatus(message("reading", {name: file.name}));
     try {
       const buf = await file.arrayBuffer();
       const doc = await PDFLib.PDFDocument.load(buf, { ignoreEncryption: true, updateMetadata: false });
@@ -751,18 +774,18 @@
       $("filePages").textContent = pageCount;
       $("fileSize").textContent = fmtSize(fileSize);
       $("fileMeta").classList.add("show");
-      $("dropTitle").textContent = "换一个 PDF";
+      $("dropTitle").textContent = t("changePDF");
       busy = false;
       refresh();
       if (doc.isEncrypted) {
-        setStatus("这个 PDF 有加密保护，切出来的文件可能打不开或内容空白。建议先去掉密码再切分。", true);
+        setStatus(message("encrypted"), true);
       }
     } catch (e) {
       busy = false;
       src = null;
       $("fileMeta").classList.remove("show");
       refresh();
-      setStatus("读取失败：文件可能已损坏或不是标准 PDF（" + (e && e.message ? e.message : e) + "）", true);
+      setStatus(message("readError", {error: e && e.message ? e.message : e}), true);
     }
   }
 
@@ -817,7 +840,7 @@
     const out = [];
     for (let i = 0; i < plan.length; i++) {
       const r = plan[i];
-      setStatus("正在切第 " + (i + 1) + " / " + plan.length + " 份…");
+      setStatus(message("splitting", {part: i + 1, total: plan.length}));
       const bytes = await build(r[0], r[1] - r[0] + 1);
       out.push({ start: r[0], end: r[1], bytes: bytes });
       setProgress((i + 1) / plan.length);
@@ -833,7 +856,7 @@
     let start = 0;
     while (start < n) {
       const k = out.length + 1;
-      setStatus("正在试切第 " + k + " 份（已完成 " + start + " / " + n + " 页）…");
+      setStatus(message("trying", {part: k, done: start, total: n}));
       const cap = Math.min(maxPages || Infinity, n - start);
       const guess = Math.max(1, Math.min(cap, Math.floor(limit * 0.85 / avg)));
 
@@ -890,9 +913,9 @@
       renderResults();
       const secs = ((performance.now() - t0) / 1000).toFixed(1);
       const warned = parts.filter(function (x) { return x.warn; }).length;
-      setStatus("切好了，用时 " + secs + " 秒。" + (warned ? "有 " + warned + " 份超过了 Claude 的常用上限，已用红框标出。" : ""));
+      setStatus(function () { return t("done", {seconds: secs}) + (warned ? t("doneWarning", {count: warned}) : ""); });
     } catch (e) {
-      setStatus("切分出错：" + (e && e.message ? e.message : e), true);
+      setStatus(message("splitError", {error: e && e.message ? e.message : e}), true);
     } finally {
       busy = false;
       goBtn.disabled = !src || !pdfReady;
@@ -913,16 +936,16 @@
     const controls = Array.from(document.querySelectorAll("input, textarea, button"));
     const disabled = controls.map(function (control) { return control.disabled; });
     controls.forEach(function (control) { control.disabled = true; });
-    setStatus(isDesktop ? "正在保存文件…" : "正在准备下载…");
+    setStatus(message(isDesktop ? "saving" : "downloading"));
     try {
       await action();
-      setStatus(isDesktop ? "已保存到“下载 / PDF裁纸台”。" : "已发起下载。");
+      setStatus(message(isDesktop ? "saved" : "downloaded"));
       if (isDesktop) {
         try { await window.pdfDesktop.reveal(); }
-        catch (e) { setStatus("文件已保存到“下载 / PDF裁纸台”，但未能打开文件夹：" + e, true); }
+        catch (e) { setStatus(message("revealError", {error: String(e)}), true); }
       }
     } catch (e) {
-      setStatus("导出失败：" + (e && e.message ? e.message : e) + "。已保存的文件仍在下载文件夹，可以重试。", true);
+      setStatus(message("exportError", {error: e && e.message ? e.message : e}), true);
     } finally {
       exporting = false;
       controls.forEach(function (control, index) { control.disabled = disabled[index]; });
@@ -948,7 +971,7 @@
       const zip = new JSZip();
       parts.forEach(function (p) { zip.file(p.name, p.bytes); });
       const blob = await zip.generateAsync({ type: "blob", compression: "STORE" });
-      const name = baseName() + "_切分.zip";
+      const name = baseName() + t("zipSuffix");
       if (isDesktop) await window.pdfDesktop.save(blob, name);
       else {
         const url = URL.createObjectURL(blob);
@@ -956,6 +979,22 @@
         setTimeout(function () { URL.revokeObjectURL(url); }, 30000);
       }
     });
+  });
+
+  $("languageToggle").addEventListener("click", function () {
+    setLanguage(document.documentElement.lang === "en" ? "zh-CN" : "en");
+    // Repaint the view without resetting the selected file, settings or Blob URLs.
+    applyLanguage();
+    libState.textContent = t(pdfLoaded ? (pdfReady ? "ready" : "loadFailed") : "loading");
+    zipBtn.title = zipReady ? "" : t("zipUnavailable");
+    $("dropTitle").textContent = t(src ? "changePDF" : "choose");
+    matTitle.textContent = t(parts.length ? "results" : "preview");
+    if (parts.length) renderResults();
+    else {
+      renderStrip(lastPlan, lastStripOptions);
+      if (lastSummary) renderSummary(lastSummary.key, lastSummary.count);
+    }
+    statusEl.textContent = typeof statusMessage === "function" ? statusMessage() : statusMessage;
   });
 
   refresh();

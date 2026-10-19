@@ -45,6 +45,7 @@ Browser tests block external resources and cover the three splitting modes, PDF 
 
 ```text
 index.html                    Shared web and desktop interface
+i18n.js                       Chinese/English strings, URL language selection and preferences
 desktop.js                    Tauri binary save bridge and environment detection
 src-tauri/src/                Desktop entry point, native saving and collision protection
 src-tauri/tauri.conf.json      Window, asset, security and installer configuration

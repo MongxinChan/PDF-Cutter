@@ -4,7 +4,7 @@
 
 A lightweight, free and open-source **PDF splitter** for the browser, Windows and macOS. Split PDFs by page count, file size or custom page ranges. No account required — your documents are processed locally and never uploaded to a server.
 
-**[Try it online](https://www.loners.site/PDF-Cutter/) · [Download the desktop app](https://github.com/MongxinChan/PDF-Cutter/releases/latest) · [Report an issue](https://github.com/MongxinChan/PDF-Cutter/issues)**
+**[Try it online](https://www.loners.site/PDF-Cutter/?lang=en) · [Download the desktop app](https://github.com/MongxinChan/PDF-Cutter/releases/latest) · [Report an issue](https://github.com/MongxinChan/PDF-Cutter/issues)**
 
 [![Latest release](https://img.shields.io/github/v/release/MongxinChan/PDF-Cutter?label=release)](https://github.com/MongxinChan/PDF-Cutter/releases/latest)
 [![MIT License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
@@ -19,11 +19,13 @@ A lightweight, free and open-source **PDF splitter** for the browser, Windows an
 
 ## See it in action
 
-![PDF Cutter splitting a 120-page sample handout into three 40-page PDFs, with individual downloads and ZIP export](docs/images/pdf-cutter-demo.png)
+![PDF Cutter splitting a 120-page sample handout into three 40-page PDFs, with individual downloads and ZIP export](docs/images/pdf-cutter-demo-en.png)
 
 *Actual app screenshot using a generated sample handout: 120 pages → 3 files of 40 pages each.*
 
-The app currently has a Simplified Chinese interface. The instructions below include the original button labels.
+The web app supports English and Simplified Chinese. Use the language button in the top-right corner to switch without losing your selected PDF, settings or results. Links from this README open the English interface directly. Your language choice is remembered when browser storage is available; an explicit `?lang=en` or `?lang=zh-CN` link takes priority.
+
+The published v1.0.1 desktop installers still use the Chinese interface. Bilingual support is included in the current source for future desktop builds.
 
 ## What can you use it for?
 
@@ -41,9 +43,9 @@ Size-based splitting checks the actual output size. If a single page already exc
 
 ## Get started in three steps
 
-1. Open the **[web app](https://www.loners.site/PDF-Cutter/)** or desktop app, then drag in a PDF or click the file area to select one.
+1. Open the **[web app](https://www.loners.site/PDF-Cutter/?lang=en)**, then drag in a PDF or click the file area to select one.
 2. Choose a splitting mode and enter your settings. Review the page-range preview.
-3. Click **开始切分** (Start splitting). Download the individual results or click **打包下载 ZIP** (Download ZIP).
+3. Click **Start splitting**. Download the individual results or click **Download ZIP**.
 
 The desktop app saves files to **Downloads / PDF裁纸台**. It adds a number to duplicate filenames instead of overwriting existing files, and opens the folder once after a batch export. In the web app, your browser controls where downloads are saved.
 
